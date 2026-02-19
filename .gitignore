@@ -1,0 +1,23 @@
+# Python cache directories
+__pycache__/
+
+# Virtual environment
+venv/
+.env
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+
+# pytest
+.pytest_cache
+.coverage
+python/tests/reports/**
+
+# robot
+robot/output/**
+
+# Binaries
+bin/**
