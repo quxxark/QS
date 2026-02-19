@@ -77,3 +77,4 @@ Trigger: On pull requests to main or develop branches
 - Status checks must pass before merging
 - Branches must be up to date
 - Required: Regression tests passing
+
