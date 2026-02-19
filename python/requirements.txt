@@ -1,0 +1,6 @@
+requests
+pytest
+pytest-cov
+pytest-html
+robotframework
+robotframework-requests
