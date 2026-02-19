@@ -1,0 +1,93 @@
+name: VTOL Emergency Return Tests
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Run Tests on Ubuntu
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          check-latest: true
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+          cache-dependency-path: 'python/requirements.txt'
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lsof curl
+      
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            go.sum
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      
+      - name: Compile Go controller binary
+        run: |
+          cd go/cmd/controller
+          go mod download
+          go build -o ../../../bin/controller
+          cd ../../..
+          chmod +x bin/controller
+      
+      - name: Install Python dependencies
+        run: |
+          cd python
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # TEST RUNNER SELECTION
+      # Option A: Run Pytest tests (./run_pytest_tests.sh)
+      # Option B: Run Robot Framework tests (./run_robot_tests.sh)
+      - name: Run tests
+        run: |
+          # Make the test script executable
+          chmod +x ./run_pytest_tests.sh
+          chmod +x ./run_robot_tests.sh
+          
+          # !!! Current selection. Change the script name below
+          ./run_robot_tests.sh
+      
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/output/
+            **/reports/
+            **/test-results/
+            **/report.html
+            **/log.html
+          retention-days: 30
+      
+      - name: Upload Robot Framework reports (if generated)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-reports
+          path: |
+            robot/output/
+            **/output.xml
+            **/report.html
+            **/log.html
+          retention-days: 30
