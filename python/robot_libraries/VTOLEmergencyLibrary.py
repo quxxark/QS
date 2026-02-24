@@ -4,7 +4,7 @@ import requests
 import sys
 from pathlib import Path
 
-# Добавляем путь к мокам
+# Add path for mocks
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from mocks import MockBatterySensor, MockGPSSensor, MockWindSensor
 
@@ -68,7 +68,7 @@ class VTOLEmergencyLibrary:
         if not self.battery_sensor:
             self._init_sensors()
         
-        # Парсим порядок
+        # Parse the order
         sequence = order.split(",")
         
         for sensor in sequence:
