@@ -1,5 +1,5 @@
 """
-VTOL Emergency Return Controller – Refactored Test Suite
+VTOL Emergency Return Controller
 
 Focus:
 - Minimal but complete safety coverage

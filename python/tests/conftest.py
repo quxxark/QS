@@ -2,7 +2,6 @@ import pytest
 import subprocess
 import time
 import requests
-import os
 from pathlib import Path
 from mocks import MockBatterySensor, MockGPSSensor, MockWindSensor
 
@@ -53,10 +52,10 @@ def reset_controller(controller_url):
 
 @pytest.fixture(autouse=True)
 def reset_before_each_test():
-    """Автоматически сбрасывать контроллер перед каждым тестом"""
+    """Reset the controller before each test"""
     try:
         requests.post("http://localhost:8080/api/v1/reset")
-        time.sleep(0.2)  # Даём время на сброс
+        time.sleep(0.2)  # Provide some time for resetting
     except:
         pass
     yield
